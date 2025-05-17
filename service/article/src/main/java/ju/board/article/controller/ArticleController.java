@@ -19,9 +19,10 @@ public class ArticleController {
     }
 
     @PostMapping("/v1/articles")
-    public ArticleResponse create(@PathVariable ArticleCreateRequest request) {
+    public ArticleResponse create(@RequestBody ArticleCreateRequest request) {
         return articleService.create(request);
     }
+
 
     @PutMapping("/v1/articles/{articleId}")
     public ArticleResponse update(@PathVariable Long articleId, @RequestBody ArticleUpdateRequest request) {
