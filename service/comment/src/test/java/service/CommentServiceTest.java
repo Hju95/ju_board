@@ -12,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
@@ -68,6 +67,37 @@ class CommentServiceTest {
         // then
         verify(commentRepository).delete(comment);
         verify(commentRepository, never()).delete(parentComment);
+    }
+
+    @Test
+    @DisplayName("하위 댓글이 삭제되고, 삭제된 부모면, 재귀적으로 모두 삭제한다.")
+    void deleteShouldDeleteAllRecursivelyIfDeletedParent() {
+        // given
+        Long articleId = 1L;
+        Long commentId = 2L;
+        Long parentCommentId = 1L;
+
+        Comment comment = createComment(articleId, commentId, parentCommentId);
+        given(comment.isRoot()).willReturn(false);
+
+        Comment parentComment = createComment(articleId, parentCommentId);
+        given(parentComment.isRoot()).willReturn(true);
+        given(parentComment.getDeleted()).willReturn(true);
+
+        given(commentRepository.findById(commentId))
+                .willReturn(Optional.of(comment));
+        given(commentRepository.countBy(articleId, commentId, 2L)).willReturn(1L);
+
+        given(commentRepository.findById(parentCommentId))
+                .willReturn(Optional.of(parentComment));
+        given(commentRepository.countBy(articleId, parentCommentId, 2L)).willReturn(1L);
+
+        // when
+        commentService.delete(commentId);
+
+        // then
+        verify(commentRepository).delete(comment);
+        verify(commentRepository).delete(parentComment);
     }
 
     private Comment createComment(Long articleId, Long commentId) {
