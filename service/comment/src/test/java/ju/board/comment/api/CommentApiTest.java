@@ -1,4 +1,4 @@
-package api;
+package ju.board.comment.api;
 
 import ju.board.comment.service.response.CommentResponse;
 import lombok.AllArgsConstructor;

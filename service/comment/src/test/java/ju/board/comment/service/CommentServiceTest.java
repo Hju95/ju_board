@@ -1,4 +1,4 @@
-package service;
+package ju.board.comment.service;
 
 import ju.board.comment.entity.Comment;
 import ju.board.comment.repository.CommentRepository;

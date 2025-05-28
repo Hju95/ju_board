@@ -1,4 +1,4 @@
-package data;
+package ju.board.comment.data;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
